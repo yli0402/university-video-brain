@@ -1,57 +1,32 @@
 <html>
     <head>
-        <title>Administrator Operation System</title>
+        <title>Create</title>
+        <link rel="stylesheet" href="style.php" media="screen">
     </head>
 
     <body>
-        <h2>Reset</h2>
-        <p>If you wish to reset the table press on the reset button. If this is the first time you're running this page, you MUST use reset</p>
-
-        <form method="POST" action="AdminContent.php">
-            <!-- if you want another page to load after the button is clicked, you have to specify that page in the action parameter -->
-            <input type="hidden" id="resetTablesRequest" name="resetTablesRequest">
-            <p><input type="submit" value="Reset" name="reset"></p>
-        </form>
-
-        <hr />
-
-        <h2>Insert Values into DemoTable</h2>
-        <form method="GEt" action="AdminContent.php"> <!--refresh page when submitted-->
-            <input type="hidden" id="insertQueryRequest" name="insertQueryRequest">
-            Number: <input type="text" name="insNo"> <br /><br />
-            Name: <input type="text" name="insName"> <br /><br />
-
-            <input type="submit" value="Insert" name="insertSubmit"></p>
-        </form>
-
-        <hr />
-
-        <h2>Update Name in DemoTable</h2>
-        <p>The values are case sensitive and if you enter in the wrong case, the update statement will not do anything.</p>
-
-        <form method="POST" action="AdminContent.php"> <!--refresh page when submitted-->
-            <input type="hidden" id="updateQueryRequest" name="updateQueryRequest">
-            Old Name: <input type="text" name="oldName"> <br /><br />
-            New Name: <input type="text" name="newName"> <br /><br />
-
-            <input type="submit" value="Update" name="updateSubmit"></p>
-        </form>
-
-        <hr />
-
-        <h2>Count the Tuples in DemoTable</h2>
-        <form method="GET" action="AdminContent.php"> <!--refresh page when submitted-->
-            <input type="hidden" id="countTupleRequest" name="countTupleRequest">
-            <input type="submit" name="countTuples"></p>
-        </form>
-
-        <hr />
-
-        <h2>Display the Tuples in DemoTable</h2>
-        <form method="GET" action="AdminContent.php"> <!--refresh page when submitted-->
-            <input type="hidden" id="displayTupleRequest" name="displayTupleRequest">
-            <input type="submit" name="displayTuples"></p>
-        </form>
+    <div class = "bg-image"></div>
+     <div class = "bg-text">
+     <h1>Start To Explore More</h1>
+        <div>
+                <h2>Create Page</h2>
+                <form method="GET" action="LivestreamPage.php">
+                    <input type="submit" value="Live" class = "c_button" name="createLivestream">
+                <from>
+                <form method="GET" action="ChannelPage.php">
+                    <input type="submit" value="Channel" class = "c_button" name="createChannel">
+                <from>
+                <form method="GET" action="ForumPage.php">
+                    <input type="submit" value="Forum" class = "c_button" name="createForum">
+                <from>
+        <div>
+        <div>
+            <p></p>
+        <div>
+        <div>
+                <p1>Sign Out! Back to -><a href="LoginPage.php" class = "link"> Home Page:)</a ></p1>
+        </div>
+        </div>
 
         <?php
 		//this tells the system that it's no longer just parsing html; it's now parsing PHP
@@ -251,4 +226,3 @@
 		?>
 	</body>
 </html>
-

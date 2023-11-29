@@ -1,60 +1,44 @@
 <html>
     <head>
-        <title>UBC Video Brain</title>
+        <title>User Dashboard</title>
+        <link rel="stylesheet" href="style.php" media="screen">
     </head>
 
     <body>
-        <h2>User Log in</h2>
-        <p>If you wish to reset the table press on the reset button. If this is the first time you're running this page, you MUST use reset</p>
-
-        <form method="GET" action="UserContent.php">
-            <!-- if you want another page to load after the button is clicked, you have to specify that page in the action parameter -->
-            <input type="hidden" id="resetTablesRequest" name="resetTablesRequest">
-            <p><input type="submit" value="Reset" name="reset"></p>
-        </form>
-
-        <hr />
-
-        <h2>Administrator Log in</h2>
-        <form method="POST" action="UserContent.php"> <!--refresh page when submitted-->
-            <input type="hidden" id="insertQueryRequest" name="insertQueryRequest">
-            Number: <input type="text" name="insNo"> <br /><br />
-            Name: <input type="text" name="insName"> <br /><br />
-
-            <input type="submit" value="Insert" name="insertSubmit"></p>
-        </form>
-
-        <hr />
-
-        <h2>Update Name in DemoTable</h2>
-        <p>The values are case sensitive and if you enter in the wrong case, the update statement will not do anything.</p>
-
-        <form method="POST" action="UI.php"> <!--refresh page when submitted-->
-            <input type="hidden" id="updateQueryRequest" name="updateQueryRequest">
-            Old Name: <input type="text" name="oldName"> <br /><br />
-            New Name: <input type="text" name="newName"> <br /><br />
-
-            <input type="submit" value="Update" name="updateSubmit"></p>
-        </form>
-
-        <hr />
-
-        <h2>Count the Tuples in DemoTable</h2>
-        <form method="GET" action="UI.php"> <!--refresh page when submitted-->
-            <input type="hidden" id="countTupleRequest" name="countTupleRequest">
-            <input type="submit" name="countTuples"></p>
-        </form>
-
-        <hr />
-
-        <h2>Display the Tuples in DemoTable</h2>
-        <form method="GET" action="UI.php"> <!--refresh page when submitted-->
-            <input type="hidden" id="displayTupleRequest" name="displayTupleRequest">
-            <input type="submit" name="displayTuples"></p>
-        </form>
-
+    <div class="bg-image"></div>
+     <div class="bg-text">
+        <div class = text> 
+          <h1 style="color:black" style = "font-family: sans-serif">Welcome Our User!</h1>
+        </div>
+     <div>
+       <div class = "box1">
+                <h2>Your User ID: U-00000001 </h2>
+                <h2>Your Subscription: V-00000001 </h2>
+                <h2>Your Posted History: </h2>
+                    <h3> - LiveStream: L-00000001<h3>
+                    <h3> - Forum: F-00000001<h3>
+                        <!-- <p1> Don't have an account? <a href=" " class = "link">Sign up here</a > </p1> -->
+                <hr />
+                <br><p1>Need help? <a href="HelpCentre.php" class = "link" style="color:MediumSeaGreen;">Help Centre:)</a ></p1>
+        </div>
+     </div>
+        
+        <div class = "box2">
+        <div>
+            <button onclick="location.href='CreatePage.php'" type="button" class = "c_button">Create</button >
+            <button onclick="location.href='WatchPage.php'" type="button" class = "c_button">Watch</button > 
+            <button onclick="" type="button" class = "c_button">VIP</button >
+            </div>        
+            <div>
+            <h2>Your Status: Regular </h2>
+                 <h2>Start Date: 2021-10-23</h2>
+                 <h2>End Date: 2022-10-23</h2>
+                 <p1>Sign Out! Back to -><a href="LoginPage.php" class = "link" style="color:MediumSeaGreen;"> Home Page:)</a ></p1>
+            </div> 
+        </div>
+     </div>
         <?php
-		//this tells the system that it's no longer just parsing html; it's now parsing PHP
+  //this tells the system that it's no longer just parsing html; it's now parsing PHP
 
         $success = True; //keep track of errors so it redirects the page only if there are no errors
         $db_conn = NULL; // edit the login credentials in connectToDB()
@@ -90,17 +74,17 @@
                 $success = False;
             }
 
-			return $statement;
-		}
+   return $statement;
+  }
 
         function executeBoundSQL($cmdstr, $list) {
             /* Sometimes the same statement will be executed several times with different values for the variables involved in the query.
-		In this case you don't need to create the statement several times. Bound variables cause a statement to only be
-		parsed once and you can reuse the statement. This is also very useful in protecting against SQL injection.
-		See the sample code below for how this function is used */
+  In this case you don't need to create the statement several times. Bound variables cause a statement to only be
+  parsed once and you can reuse the statement. This is also very useful in protecting against SQL injection.
+  See the sample code below for how this function is used */
 
-			global $db_conn, $success;
-			$statement = OCIParse($db_conn, $cmdstr);
+   global $db_conn, $success;
+   $statement = OCIParse($db_conn, $cmdstr);
 
             if (!$statement) {
                 echo "<br>Cannot parse the following command: " . $cmdstr . "<br>";
@@ -115,7 +99,7 @@
                     //echo "<br>".$bind."<br>";
                     OCIBindByName($statement, $bind, $val);
                     unset ($val); //make sure you do not remove this. Otherwise $val will remain in an array object wrapper which will not be recognized by Oracle as a proper datatype
-				}
+    }
 
                 $r = OCIExecute($statement, OCI_DEFAULT);
                 if (!$r) {
@@ -144,7 +128,7 @@
             global $db_conn;
 
             // Your username is ora_(CWL_ID) and the password is a(student number). For example,
-			// ora_platypus is the username and a12345678 is the password.
+   // ora_platypus is the username and a12345678 is the password.
             $db_conn = OCILogon("ora_ycai12", "a25616533", "dbhost.students.cs.ubc.ca:1522/stu");
 
             if ($db_conn) {
@@ -216,7 +200,7 @@
         }
 
         // HANDLE ALL POST ROUTES
-	// A better coding practice is to have one method that reroutes your requests accordingly. It will make it easier to add/remove functionality.
+ // A better coding practice is to have one method that reroutes your requests accordingly. It will make it easier to add/remove functionality.
         function handlePOSTRequest() {
             if (connectToDB()) {
                 if (array_key_exists('resetTablesRequest', $_POST)) {
@@ -231,7 +215,7 @@
         }
 
         // HANDLE ALL GET ROUTES
-	// A better coding practice is to have one method that reroutes your requests accordingly. It will make it easier to add/remove functionality.
+ // A better coding practice is to have one method that reroutes your requests accordingly. It will make it easier to add/remove functionality.
         function handleGETRequest() {
             if (connectToDB()) {
                 if (array_key_exists('countTuples', $_GET)) {
@@ -243,13 +227,11 @@
             }
         }
 
-		if (isset($_POST['reset']) || isset($_POST['updateSubmit']) || isset($_POST['insertSubmit'])) {
+  if (isset($_POST['reset']) || isset($_POST['updateSubmit']) || isset($_POST['insertSubmit'])) {
             handlePOSTRequest();
         } else if (isset($_GET['countTupleRequest']) || isset($_GET['displayTuples'])) {
             handleGETRequest();
         }
-		?>
-	</body>
+  ?>
+ </body>
 </html>
-
-

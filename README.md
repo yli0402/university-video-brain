@@ -1,5 +1,5 @@
 # project_e5v2m_m3j3b_x1k3b
-![](ER.jpeg)
+![](PHP/ER.jpeg)
 Above is the ER diagram for our final project. We only made one small changes on entity "LiveStream" where a new attribute "Tag" is added to better apply the group by operation. We want to highlight it here to make it more understandable for our coding structure.
 
 Comment highlight:

@@ -1,34 +1,33 @@
 <html>
     <head>
-        <title>UBC Video Brain</title>
+        <title>Login</title>
+        <link rel="stylesheet" href="style.php" media="screen">
     </head>
 
     <body>
+    <div class="bg-image"></div>
+     <div class="bg-text">
+     <h1>UBC VIDEO BRAIN</h1>
         <h2>User Log in</h2>
-        <p>If you wish to reset the table press on the reset button. If this is the first time you're running this page, you MUST use reset</p>
-
-        <form method="GET" action="UserContent.php">
+        <form method="GET" action="LoginPage.php">
             <!-- if you want another page to load after the button is clicked, you have to specify that page in the action parameter -->
-            <input type="hidden" id="handleUserLoginRequest" name="handleUserLoginRequest">
-                        Number: <input type="text" name="insNo"> <br /><br />
-                        Name: <input type="text" name="insName"> <br /><br />
-            <p><input type="submit" value="Login" name="Login"></p>
+            <input type="hidden" id="userLoginRequest" name="userLoginRequest">
+                Email: <input type="text" id="u_email" name="u_email"><br /><br />
+                Password: <input type="text" id="u_password" name="u_password"><br /><br />
+            <p><input type="submit" class= "button" value="Login" name="user"></p>
         </form>
-
-        <hr />
 
         <h2>Administrator Log in</h2>
-        <form method="GET" action="AdminContent.php"> <!--refresh page when submitted-->
-            <input type="hidden" id="handleAdminLoginRequest" name="handleAdminLoginRequest">
-            Number: <input type="text" name="insNo"> <br /><br />
-            Name: <input type="text" name="insName"> <br /><br />
-
-            <input type="submit" value="Login" name="Login"></p>
+        <form method="GET" action="LoginPage.php">
+            <!-- if you want another page to load after the button is clicked, you have to specify that page in the action parameter -->
+            <input type="hidden" id="adminLoginRequest" name="adminLoginRequest">
+            Administrator ID: <input type="text" id="a_id" name="a_id"><br /><br />
+            <p><input type="submit" class= "button" value="Login" name="admin"></p>
         </form>
 
-        <?php
-		//this tells the system that it's no longer just parsing html; it's now parsing PHP
+    </div>
 
+        <?php
         $success = True; //keep track of errors so it redirects the page only if there are no errors
         $db_conn = NULL; // edit the login credentials in connectToDB()
         $show_debug_alert_messages = False; // set to True if you want alerts to show you which methods are being triggered (see how it is used in debugAlertMessage())
@@ -160,7 +159,7 @@
             OCICommit($db_conn);
         }
 
-        function handleUserLoginRequest() {
+        function handleInsertRequest() {
             global $db_conn;
 
             //Getting the values from user and insert data into the table
@@ -177,15 +176,38 @@
             OCICommit($db_conn);
         }
 
-        function handleCountRequest() {
+        function handleUserRequest() {
             global $db_conn;
 
-            $result = executePlainSQL("SELECT Count(*) FROM demoTable");
+            $user_email = $_GET['u_email'];
+            $user_password = $_GET['u_password'];
+            // echo $user_email;
 
-            if (($row = oci_fetch_row($result)) != false) {
-                echo "<br> The number of tuples in demoTable: " . $row[0] . "<br>";
+            $result = executePlainSQL("SELECT Count(1)
+                                       FROM accountOwn
+                                       WHERE Email = '" . $user_email . "' AND AccountPassword = '" . $user_password . "'");
+            $row = OCI_Fetch_Array($result, OCI_BOTH);
+                if ($row[0] == 1){
+                    header("Location: https://www.students.cs.ubc.ca/~qliu20/UserContent.php");
+                }
+        }
 
-            }
+        function handleAdminRequest() {
+            global $db_conn;
+            $admin_id = $_GET['a_id'];
+            $result = executePlainSQL("SELECT Count(1)
+                                       FROM adminiMain
+                                       WHERE AdminID = '". $admin_id ."'");
+            $row = OCI_Fetch_Array($result, OCI_BOTH);
+                if ($row[0] == 1){
+                    $name = executePlainSQL("SELECT AdminstratorName
+                                             FROM adminiMain
+                                             WHERE AdminID = ". $admin_id ."'");
+                    header("Location: https://www.students.cs.ubc.ca/~qliu20/AdminContent.php");
+                    executePlainSQL("UPDATE adminiStatus SET WorkStatus = 1
+                                     WHERE AdminName = ". $admin_id ."'");
+                    echo "success change workstatus";
+                }
         }
 
         // HANDLE ALL POST ROUTES
@@ -207,12 +229,10 @@
 	// A better coding practice is to have one method that reroutes your requests accordingly. It will make it easier to add/remove functionality.
         function handleGETRequest() {
             if (connectToDB()) {
-                if (array_key_exists('countTuples', $_GET)) {
-                    handleCountRequest();
-                } else if (array_key_exists('displayTuples', $_GET)) {
-                    printResult(executePlainSQL("SELECT * FROM demoTable"));
-                } else if (array_key_exists('', $_GET) {
-                    handleUserLoginRequest();
+                if (array_key_exists('user', $_GET)) {
+                    handleUserRequest();
+                } else if (array_key_exists('admin', $_GET)) {
+                    handleAdminRequest();
                 }
                 disconnectFromDB();
             }
@@ -220,10 +240,12 @@
 
 		if (isset($_POST['reset']) || isset($_POST['updateSubmit']) || isset($_POST['insertSubmit'])) {
             handlePOSTRequest();
-        } else if (isset($_GET['countTupleRequest']) || isset($_GET['displayTuples']) || isset($_GET['']) {
+        } else if (isset($_GET['userLoginRequest']) || isset($_GET['adminLoginRequest'])) {
             handleGETRequest();
         }
 		?>
 	</body>
 </html>
+
+
 

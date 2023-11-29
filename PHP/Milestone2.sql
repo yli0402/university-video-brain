@@ -24,262 +24,264 @@ drop table forum;
 drop table channel;
 
 CREATE TABLE channel (
-    ChannelID Varchar(10) PRIMARY KEY,
-    ChannelStatus Integer,
-    Showlist Varchar(100));
+                         ChannelID Varchar(10) PRIMARY KEY,
+                         ChannelStatus Integer,
+                         Showlist Varchar(100));
 grant select on channel to public;
 
 CREATE TABLE forum (
-    PostID Varchar(10) PRIMARY KEY,
-    ForumTag Varchar(20),
-    Author Varchar(20),
-    Title Varchar(20));
+                       PostID Varchar(10) PRIMARY KEY,
+                       ForumTag Varchar(20),
+                       Author Varchar(20),
+                       Title Varchar(20));
 grant select on forum to public;
 
 CREATE TABLE ubcer (
-    UserID Varchar(10) PRIMARY KEY,
-    UserName Varchar(20),
-    Subscription Varchar(1000));
+                       UserID Varchar(10) PRIMARY KEY,
+                       UserName Varchar(20),
+                       Subscription Varchar(1000));
 grant select on ubcer to public;
 
 CREATE TABLE vipUserData (
-    TimeLength Integer,
-    StartDate Date,
-    EndDate Date,
-    PRIMARY KEY (TimeLength, StartDate));
+                             TimeLength Integer,
+                             StartDate Date,
+                             EndDate Date,
+                             PRIMARY KEY (TimeLength, StartDate));
 grant select on vipUserData to public;
 
 CREATE TABLE vipUserMain (
-    UserID Varchar(10) PRIMARY KEY,
-    Timeperiod Integer,
-    Since Date,
-    FOREIGN KEY (UserID) REFERENCES ubcer
-    ON DELETE CASCADE,
+                             UserID Varchar(10) PRIMARY KEY,
+                             Timeperiod Integer,
+                             Since Date,
+                             FOREIGN KEY (UserID) REFERENCES ubcer
+                                 ON DELETE CASCADE,
     --ON UPDATE CASCADE
-    FOREIGN KEY (Timeperiod, Since) REFERENCES vipUserData
-    ON DELETE CASCADE);
-    --ON UPDATE CASCADE);
+                             FOREIGN KEY (Timeperiod, Since) REFERENCES vipUserData
+                                 ON DELETE CASCADE);
+--ON UPDATE CASCADE);
 grant select on vipUserMain to public;
 
 CREATE TABLE LivestreamData (
-    LivestreamLength Integer,
-    StartTime varchar(40),
-    EndTime varchar(40),
-    PRIMARY KEY (LivestreamLength, StartTime));
+                                LivestreamLength Integer,
+                                StartTime varchar(40),
+                                EndTime varchar(40),
+                                PRIMARY KEY (LivestreamLength, StartTime));
 grant select on LivestreamData to public;
 
+-- change remember
 CREATE TABLE LivestreamMain (
-    LiveStreamID Varchar(10) PRIMARY KEY,
-    PeriodLength Integer,
-    BeginTime varchar(40),
-    FOREIGN KEY (PeriodLength, BeginTime) REFERENCES LivestreamData
-    ON DELETE CASCADE);
-    --ON UPDATE CASCADE);
+                                LiveStreamID Varchar(10) PRIMARY KEY,
+                                Tag varchar(40),
+                                PeriodLength Integer,
+                                BeginTime varchar(40),
+                                FOREIGN KEY (PeriodLength, BeginTime) REFERENCES LivestreamData
+                                    ON DELETE CASCADE);
+--ON UPDATE CASCADE);
 grant select on LivestreamMain to public;
 
 CREATE TABLE rvContain (
-    VideoID Varchar(10),
-    ChannelID Varchar(10),
-    VideoLength varchar(30),
-    Tag Varchar(20),
-    CreateTime varchar(40),
-    VideoStatus Integer,
-    PRIMARY KEY(VideoID, ChannelID),
-    FOREIGN KEY (ChannelID) REFERENCES channel
-    ON DELETE CASCADE);
-    --ON UPDATE CASCADE);
+                           VideoID Varchar(10),
+                           ChannelID Varchar(10),
+                           VideoLength varchar(30),
+                           Tag Varchar(20),
+                           CreateTime varchar(40),
+                           VideoStatus Integer,
+                           PRIMARY KEY(VideoID, ChannelID),
+                           FOREIGN KEY (ChannelID) REFERENCES channel
+                               ON DELETE CASCADE);
+--ON UPDATE CASCADE);
 grant select on rvContain to public;
 
 CREATE TABLE accountOwn (
-    AccountID Varchar(10),
-    UserID Varchar(10),
-    AccountStatus Integer,
-    Email Varchar(50),
-    AccountPassword Varchar(100),
-    BirthDate Date,
-    PRIMARY KEY (AccountID, UserID),
-    FOREIGN KEY (UserID) REFERENCES ubcer
-    ON DELETE CASCADE);
-    --ON UPDATE CASCADE);
+                            AccountID Varchar(10),
+                            UserID Varchar(10),
+                            AccountStatus Integer,
+                            Email Varchar(50),
+                            AccountPassword Varchar(100),
+                            BirthDate Date,
+                            PRIMARY KEY (AccountID, UserID),
+                            FOREIGN KEY (UserID) REFERENCES ubcer
+                                ON DELETE CASCADE);
+--ON UPDATE CASCADE);
 grant select on accountOwn to public;
 
 CREATE TABLE helpcenter (
-    HelpIssueID Varchar(10) PRIMARY KEY,
-    ChannelID Varchar(10),
-    UserID Varchar(10),
-    VideoID Varchar(10),
-    AccountID Varchar(10), 
-    PostID Varchar(10),
-    LiveStreamID Varchar(10),
-    ProcessStatus Integer,
-    IssueContent Varchar(1000),
-    IssueType Varchar(20),
-    FOREIGN KEY (VideoID, ChannelID) REFERENCES rvContain(VideoID, ChannelID)
-    ON DELETE CASCADE,
+                            HelpIssueID Varchar(10) PRIMARY KEY,
+                            ChannelID Varchar(10),
+                            UserID Varchar(10),
+                            VideoID Varchar(10),
+                            AccountID Varchar(10),
+                            PostID Varchar(10),
+                            LiveStreamID Varchar(10),
+                            ProcessStatus Integer,
+                            IssueContent Varchar(1000),
+                            IssueType Varchar(20),
+                            FOREIGN KEY (VideoID, ChannelID) REFERENCES rvContain(VideoID, ChannelID)
+                                ON DELETE CASCADE,
     -- ON UPDATE CASCADE,
-    FOREIGN KEY (AccountID, UserID) REFERENCES accountOwn(AccountID, UserID)
-    ON DELETE CASCADE,
+                            FOREIGN KEY (AccountID, UserID) REFERENCES accountOwn(AccountID, UserID)
+                                ON DELETE CASCADE,
     --ON UPDATE CASCADE,
-    FOREIGN KEY (PostID) REFERENCES forum
-    ON DELETE CASCADE,
+                            FOREIGN KEY (PostID) REFERENCES forum
+                                ON DELETE CASCADE,
     --ON UPDATE CASCADE,
-    FOREIGN KEY (LiveStreamID ) REFERENCES LivestreamMain
-    ON DELETE CASCADE);
-    --ON UPDATE CASCADE);
+                            FOREIGN KEY (LiveStreamID ) REFERENCES LivestreamMain
+                                ON DELETE CASCADE);
+--ON UPDATE CASCADE);
 grant select on helpcenter to public;
 
 CREATE TABLE adminiStatus (
-    AdminName Varchar(20) PRIMARY KEY,
-    WorkStatus Integer);
+                              AdminName Varchar(20) PRIMARY KEY,
+                              WorkStatus Integer);
 grant select on adminiStatus to public;
 
 CREATE TABLE adminiMain (
-    AdminID Varchar(10) PRIMARY KEY,
-    AdminstratorName Varchar(20),
-    FOREIGN KEY (AdminstratorName) REFERENCES adminiStatus
-    ON DELETE CASCADE);
-    --ON UPDATE CASCADE);
+                            AdminID Varchar(10) PRIMARY KEY,
+                            AdminstratorName Varchar(20),
+                            FOREIGN KEY (AdminstratorName) REFERENCES adminiStatus
+                                ON DELETE CASCADE);
+--ON UPDATE CASCADE);
 grant select on adminiMain to public;
 
 CREATE TABLE sponsorCompany (
-    SponsorID Varchar(10) PRIMARY KEY,
-    CompanyName Char(20),
-    Budget Integer);
+                                SponsorID Varchar(10) PRIMARY KEY,
+                                CompanyName Char(20),
+                                Budget Integer);
 grant select on sponsorCompany to public;
 
 CREATE TABLE adminiMonitorAccount (
-    AdminID Varchar(10),
-    AccountID Varchar(10),
-    UserID Varchar(10),
-    PRIMARY KEY (AdminID, AccountID, UserID),
-    FOREIGN KEY (AdminID) REFERENCES adminiMain
-    ON DELETE CASCADE,
+                                      AdminID Varchar(10),
+                                      AccountID Varchar(10),
+                                      UserID Varchar(10),
+                                      PRIMARY KEY (AdminID, AccountID, UserID),
+                                      FOREIGN KEY (AdminID) REFERENCES adminiMain
+                                          ON DELETE CASCADE,
     --ON UPDATE CASCADE
-    FOREIGN KEY (AccountID, UserID) REFERENCES accountOwn
-    ON DELETE CASCADE);
-    --ON UPDATE CASCADE);
+                                      FOREIGN KEY (AccountID, UserID) REFERENCES accountOwn
+                                          ON DELETE CASCADE);
+--ON UPDATE CASCADE);
 grant select on adminiMonitorAccount to public;
 
 CREATE TABLE adminiMonitorForum (
-    AdminID Varchar(10),
-    PostID Varchar(10),
-    PRIMARY KEY (AdminID, PostID),
-    FOREIGN KEY (AdminID) REFERENCES adminiMain
-    ON DELETE CASCADE,
+                                    AdminID Varchar(10),
+                                    PostID Varchar(10),
+                                    PRIMARY KEY (AdminID, PostID),
+                                    FOREIGN KEY (AdminID) REFERENCES adminiMain
+                                        ON DELETE CASCADE,
     --ON UPDATE CASCADE
-    FOREIGN KEY (PostID ) REFERENCES forum
-    ON DELETE CASCADE);
-    --ON UPDATE CASCADE);
+                                    FOREIGN KEY (PostID ) REFERENCES forum
+                                        ON DELETE CASCADE);
+--ON UPDATE CASCADE);
 grant select on adminiMonitorForum to public;
 
 CREATE TABLE adminiMonitorLivestream (
-    AdminID Varchar(10),
-    LiveStreamID Varchar(10),
-    PRIMARY KEY (AdminID, LiveStreamID),
-    FOREIGN KEY (AdminID) REFERENCES adminiMain
-    ON DELETE CASCADE,
+                                         AdminID Varchar(10),
+                                         LiveStreamID Varchar(10),
+                                         PRIMARY KEY (AdminID, LiveStreamID),
+                                         FOREIGN KEY (AdminID) REFERENCES adminiMain
+                                             ON DELETE CASCADE,
     --ON UPDATE CASCADE,
-    FOREIGN KEY (LiveStreamID) REFERENCES LivestreamMain
-    ON DELETE CASCADE);
-    --ON UPDATE CASCADE);
+                                         FOREIGN KEY (LiveStreamID) REFERENCES LivestreamMain
+                                             ON DELETE CASCADE);
+--ON UPDATE CASCADE);
 grant select on adminiMonitorLivestream to public;
 
 CREATE TABLE adminiApproveRV (
-    AdminID Varchar(10),
-    VideoID Varchar(10),
-    ChannelID Varchar(10),
-    PRIMARY KEY (AdminID, VideoID, ChannelID),
-    FOREIGN KEY (AdminID) REFERENCES adminiMain
-    ON DELETE CASCADE,
+                                 AdminID Varchar(10),
+                                 VideoID Varchar(10),
+                                 ChannelID Varchar(10),
+                                 PRIMARY KEY (AdminID, VideoID, ChannelID),
+                                 FOREIGN KEY (AdminID) REFERENCES adminiMain
+                                     ON DELETE CASCADE,
     --ON UPDATE CASCADE,
-    FOREIGN KEY (VideoID, ChannelID) REFERENCES rvContain
-    ON DELETE CASCADE);
-    --ON UPDATE CASCADE);
+                                 FOREIGN KEY (VideoID, ChannelID) REFERENCES rvContain
+                                     ON DELETE CASCADE);
+--ON UPDATE CASCADE);
 grant select on adminiApproveRV to public;
 
 CREATE TABLE userProduceLivestream (
-    LiveStreamID Varchar(10),
-    UserID Varchar(10),
-    PRIMARY KEY (LiveStreamID, UserID),
-    FOREIGN KEY (UserID) REFERENCES ubcer
-    ON DELETE CASCADE,
+                                       LiveStreamID Varchar(10),
+                                       UserID Varchar(10),
+                                       PRIMARY KEY (LiveStreamID, UserID),
+                                       FOREIGN KEY (UserID) REFERENCES ubcer
+                                           ON DELETE CASCADE,
     --ON UPDATE CASCADE,
-    FOREIGN KEY (LiveStreamID) REFERENCES LivestreamMain
-    ON DELETE CASCADE);
-    --ON UPDATE CASCADE);
+                                       FOREIGN KEY (LiveStreamID) REFERENCES LivestreamMain
+                                           ON DELETE CASCADE);
+--ON UPDATE CASCADE);
 grant select on userProduceLivestream to public;
 
 CREATE TABLE userProduceChannel (
-    ChannelID Varchar(10),
-    UserID Varchar(10),
-    PRIMARY KEY (ChannelID, UserID),
-    FOREIGN KEY (UserID ) REFERENCES ubcer
-    ON DELETE CASCADE,
+                                    ChannelID Varchar(10),
+                                    UserID Varchar(10),
+                                    PRIMARY KEY (ChannelID, UserID),
+                                    FOREIGN KEY (UserID ) REFERENCES ubcer
+                                        ON DELETE CASCADE,
     --ON UPDATE CASCADE,
-    FOREIGN KEY (ChannelID) REFERENCES channel
-    ON DELETE CASCADE);
-    --ON UPDATE CASCADE);
+                                    FOREIGN KEY (ChannelID) REFERENCES channel
+                                        ON DELETE CASCADE);
+--ON UPDATE CASCADE);
 grant select on userProduceChannel to public;
 
 CREATE TABLE userWatchLivestream (
-    LiveStreamID Varchar(10),
-    UserID Varchar(10),
-    PRIMARY KEY (LiveStreamID, UserID),
-    FOREIGN KEY (UserID) REFERENCES ubcer
-    ON DELETE CASCADE,
+                                     LiveStreamID Varchar(10),
+                                     UserID Varchar(10),
+                                     PRIMARY KEY (LiveStreamID, UserID),
+                                     FOREIGN KEY (UserID) REFERENCES ubcer
+                                         ON DELETE CASCADE,
     --ON UPDATE CASCADE,
-    FOREIGN KEY (LiveStreamID) REFERENCES LivestreamMain
-    ON DELETE CASCADE);
-    --ON UPDATE CASCADE);
+                                     FOREIGN KEY (LiveStreamID) REFERENCES LivestreamMain
+                                         ON DELETE CASCADE);
+--ON UPDATE CASCADE);
 grant select on userWatchLivestream to public;
 
 CREATE TABLE userWatchChannel (
-    ChannelID Varchar(10),
-    UserID Varchar(10),
-    PRIMARY KEY (ChannelID, UserID),
-    FOREIGN KEY (UserID) REFERENCES ubcer
-    ON DELETE CASCADE,
+                                  ChannelID Varchar(10),
+                                  UserID Varchar(10),
+                                  PRIMARY KEY (ChannelID, UserID),
+                                  FOREIGN KEY (UserID) REFERENCES ubcer
+                                      ON DELETE CASCADE,
     --ON UPDATE CASCADE,
-    FOREIGN KEY (ChannelID) REFERENCES channel
-    ON DELETE CASCADE);
-    --ON UPDATE CASCADE);
+                                  FOREIGN KEY (ChannelID) REFERENCES channel
+                                      ON DELETE CASCADE);
+--ON UPDATE CASCADE);
 grant select on userWatchChannel to public;
 
 CREATE TABLE posted (
-    UserID Varchar(10),
-    PostID Varchar(10),
-    PRIMARY KEY (UserID, PostID),
-    FOREIGN KEY (UserID) REFERENCES ubcer
-    ON DELETE CASCADE,
+                        UserID Varchar(10),
+                        PostID Varchar(10),
+                        PRIMARY KEY (UserID, PostID),
+                        FOREIGN KEY (UserID) REFERENCES ubcer
+                            ON DELETE CASCADE,
     --ON UPDATE CASCADE,
-    FOREIGN KEY (PostID) REFERENCES forum
-    ON DELETE CASCADE);
-    --ON UPDATE CASCADE);
+                        FOREIGN KEY (PostID) REFERENCES forum
+                            ON DELETE CASCADE);
+--ON UPDATE CASCADE);
 grant select on posted to public;
 
 CREATE TABLE scSponsorRV (
-    VideoID Varchar(10),
-    SponsorID Varchar(10),
-    ChannelID Varchar(10),
-    PRIMARY KEY (VideoID, SponsorID, ChannelID),
-    FOREIGN KEY (SponsorID) REFERENCES sponsorCompany
-    ON DELETE CASCADE,
+                             VideoID Varchar(10),
+                             SponsorID Varchar(10),
+                             ChannelID Varchar(10),
+                             PRIMARY KEY (VideoID, SponsorID, ChannelID),
+                             FOREIGN KEY (SponsorID) REFERENCES sponsorCompany
+                                 ON DELETE CASCADE,
     --ON UPDATE CASCADE,
-    FOREIGN KEY (VideoID, ChannelID) REFERENCES rvContain
-    ON DELETE CASCADE);
-    --ON UPDATE CASCADE);
+                             FOREIGN KEY (VideoID, ChannelID) REFERENCES rvContain
+                                 ON DELETE CASCADE);
+--ON UPDATE CASCADE);
 grant select on scSponsorRV to public;
 
 CREATE TABLE SCSponsorChannel  (
-    ChannelID Varchar(10),
-    SponsorID Varchar(10),
-    PRIMARY KEY(ChannelID, SponsorID),
-    FOREIGN KEY (ChannelID) REFERENCES channel
-    ON DELETE CASCADE,
+                                   ChannelID Varchar(10),
+                                   SponsorID Varchar(10),
+                                   PRIMARY KEY(ChannelID, SponsorID),
+                                   FOREIGN KEY (ChannelID) REFERENCES channel
+                                       ON DELETE CASCADE,
     --ON UPDATE CASCADE,
-    FOREIGN KEY (SponsorID) REFERENCES sponsorCompany
-    ON DELETE CASCADE);
-    --ON UPDATE CASCADE);
+                                   FOREIGN KEY (SponsorID) REFERENCES sponsorCompany
+                                       ON DELETE CASCADE);
+--ON UPDATE CASCADE);
 grant select on SCSponsorChannel to public;
 
 insert into channel
@@ -352,18 +354,27 @@ values (40, TO_DATE('2021-10-23 10:00:00', 'yyyy-mm-dd HH:MI:SS'), TO_DATE('2021
 insert into LivestreamData
 values (50, TO_DATE('2021-10-23 10:00:00', 'yyyy-mm-dd HH:MI:SS'), TO_DATE('2021-10-23 10:00:50', 'yyyy-mm-dd HH:MI:SS'));
 insert into LivestreamData
-values (60, TO_DATE('2021-10-23 10:00:00', 'yyyy-mm-dd HH:MI:SS'), TO_DATE('2021-10-23 10:00:00', 'yyyy-mm-dd HH:MI:SS'));
+values (60, TO_DATE('2021-10-23 10:00:00', 'yyyy-mm-dd HH:MI:SS'), TO_DATE('2021-10-23 11:00:00', 'yyyy-mm-dd HH:MI:SS'));
+insert into LivestreamData
+values (70, TO_DATE('2021-10-23 10:00:00', 'yyyy-mm-dd HH:MI:SS'), TO_DATE('2021-10-23 11:10:00', 'yyyy-mm-dd HH:MI:SS'));
+insert into LivestreamData
+values (62, TO_DATE('2021-10-23 11:00:00', 'yyyy-mm-dd HH:MI:SS'), TO_DATE('2021-10-23 12:02:00', 'yyyy-mm-dd HH:MI:SS'));
 
 insert into LivestreamMain
-values ('L-00000001', 20, TO_DATE('2021-10-23 10:00:00', 'yyyy-mm-dd HH:MI:SS'));
+values ('L-00000001', 'music', 20, TO_DATE('2021-10-23 10:00:00', 'yyyy-mm-dd HH:MI:SS'));
 insert into LivestreamMain
-values ('L-00000002', 30, TO_DATE('2021-10-23 10:00:00', 'yyyy-mm-dd HH:MI:SS'));
+values ('L-00000002', 'talk show', 30, TO_DATE('2021-10-23 10:00:00', 'yyyy-mm-dd HH:MI:SS'));
 insert into LivestreamMain
-values ('L-00000003', 20, TO_DATE('2021-10-23 10:00:00', 'yyyy-mm-dd HH:MI:SS'));
+values ('L-00000003', 'shopping', 40, TO_DATE('2021-10-23 10:00:00', 'yyyy-mm-dd HH:MI:SS'));
 insert into LivestreamMain
-values ('L-00000004', 20, TO_DATE('2021-10-23 10:00:00', 'yyyy-mm-dd HH:MI:SS'));
+values ('L-00000004', 'sports', 50, TO_DATE('2021-10-23 10:00:00', 'yyyy-mm-dd HH:MI:SS'));
 insert into LivestreamMain
-values ('L-00000005', 20, TO_DATE('2021-10-23 10:00:00', 'yyyy-mm-dd HH:MI:SS'));
+values ('L-00000005', 'jam', 60, TO_DATE('2021-10-23 10:00:00', 'yyyy-mm-dd HH:MI:SS'));
+insert into LivestreamMain
+values ('L-00000006', 'jam', 70, TO_DATE('2021-10-23 10:00:00', 'yyyy-mm-dd HH:MI:SS'));
+insert into LivestreamMain
+values ('L-00000007', 'jam', 62, TO_DATE('2021-10-23 11:00:00', 'yyyy-mm-dd HH:MI:SS'));
+
 
 insert into rvContain
 values('V-00000001', 'C-00000001', '00:10:00','music', '2021-10-23 14:00:00', 1);
@@ -444,6 +455,8 @@ insert into sponsorCompany
 values('S-00000004','Puma', 2000);
 insert into sponsorCompany
 values('S-00000005','Pop Mart', 1);
+insert into sponsorCompany
+values('S-00000006','Pop Mart', 100);
 
 -- all accounts are monitored by ads
 insert into adminiMonitorAccount
@@ -620,7 +633,9 @@ values('V-00000004','S-00000002', 'C-00000004');
 insert into SCSponsorChannel
 values('C-00000001','S-00000005');
 insert into SCSponsorChannel
-values('C-00000003','S-00000005');
+values('C-00000003','S-00000006');
+insert into SCSponsorChannel
+values('C-00000002','S-00000004');
 -- a channel can be sponsored by many sponsor companies
 insert into SCSponsorChannel
 values('C-00000004','S-00000005');
@@ -628,3 +643,12 @@ insert into SCSponsorChannel
 values('C-00000004','S-00000001');
 insert into SCSponsorChannel
 values('C-00000004','S-00000003');
+insert into SCSponsorChannel
+values('C-00000004','S-00000002');
+insert into SCSponsorChannel
+values('C-00000004','S-00000004');
+insert into SCSponsorChannel
+values('C-00000004','S-00000006');
+
+COMMIT WORK;
+
